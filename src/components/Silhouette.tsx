@@ -1,3 +1,11 @@
+// Silueta placeholder de depuración — colores fuertes por zona para verificar
+// visualmente hacia dónde apunta la cámara en cada sección del scroll.
+// viewBox = 0 0 400 800. Coordenadas de centro de cada zona (para transform-origin / cálculo de cámara):
+//   corazon  -> x=200 (50%),  y=260 (32.5%)
+//   cerebro  -> x=200 (50%),  y=110 (13.75%)
+//   ojos     -> x=200 (50%),  y=100 (12.5%)   [dentro de cerebro]
+//   manos    -> x=60/340 (15% / 85%), y=340 (42.5%)  [centro combinado x=200, 50%]
+//   piernas  -> x=200 (50%),  y=565 (70.6%)  [tramo y=405 a y=725]
 export default function Silhouette({ className }: { className?: string }) {
   return (
     <svg
@@ -7,40 +15,49 @@ export default function Silhouette({ className }: { className?: string }) {
       aria-hidden="true"
     >
       <g id="camera">
-        {/* connective body — not an interactive zone, just holds the figure together */}
-        <g id="figura-base" fill="none" stroke="currentColor" strokeWidth="3.5" opacity={0.9}>
-          <rect x="140" y="175" width="120" height="230" rx="45" />
-          <line x1="200" y1="150" x2="200" y2="178" strokeWidth="3.5" />
-          <line x1="150" y1="230" x2="120" y2="330" />
-          <line x1="250" y1="230" x2="280" y2="330" />
+        {/* estructura neutra — solo conecta el muñeco, no es una zona interactiva */}
+        <g
+          id="figura-base"
+          fill="none"
+          stroke="#94a3b8"
+          strokeWidth="4"
+          strokeLinecap="round"
+        >
+          {/* columna / torso */}
+          <line x1="200" y1="165" x2="200" y2="400" />
+          {/* hombros */}
+          <line x1="120" y1="200" x2="280" y2="200" />
+          {/* brazos (hombro -> mano) */}
+          <line x1="120" y1="200" x2="60" y2="340" />
+          <line x1="280" y1="200" x2="340" y2="340" />
         </g>
 
+        {/* cerebro — cabeza. centro aprox: x=50%, y=13.75% */}
         <g id="cerebro">
-          <circle cx="200" cy="108" r="54" fill="none" stroke="currentColor" strokeWidth="3.5" />
+          <circle cx="200" cy="110" r="58" fill="#2563eb" fillOpacity="0.55" stroke="#2563eb" strokeWidth="4" />
         </g>
 
+        {/* ojos — dentro de la cabeza. centro aprox: x=50%, y=12.5% */}
         <g id="ojos">
-          <circle cx="181" cy="100" r="6.5" fill="currentColor" />
-          <circle cx="219" cy="100" r="6.5" fill="currentColor" />
+          <circle cx="182" cy="102" r="8" fill="#16a34a" />
+          <circle cx="218" cy="102" r="8" fill="#16a34a" />
         </g>
 
+        {/* corazon — centro del pecho. centro aprox: x=50%, y=32.5% */}
         <g id="corazon">
-          <path
-            d="M200 248 C194 231 163 231 163 260 C163 288 200 309 200 325 C200 309 237 288 237 260 C237 231 206 231 200 248 Z"
-            fill="currentColor"
-          />
+          <circle cx="200" cy="260" r="34" fill="#dc2626" />
         </g>
 
-        <g id="manos" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round">
-          <path d="M150 230 L108 268 L64 322" />
-          <circle cx="58" cy="336" r="26" fill="currentColor" stroke="none" />
-          <path d="M250 230 L292 268 L336 322" />
-          <circle cx="342" cy="336" r="26" fill="currentColor" stroke="none" />
+        {/* manos — extremos de ambos brazos. centro combinado aprox: x=50%, y=42.5% */}
+        <g id="manos">
+          <circle cx="60" cy="340" r="30" fill="#f97316" />
+          <circle cx="340" cy="340" r="30" fill="#f97316" />
         </g>
 
-        <g id="piernas" fill="none" stroke="currentColor" strokeWidth="3.5">
-          <rect x="152" y="400" width="46" height="330" rx="22" />
-          <rect x="202" y="400" width="46" height="330" rx="22" />
+        {/* piernas — de la cadera a los pies. centro aprox: x=50%, y=70.6% */}
+        <g id="piernas">
+          <rect x="155" y="405" width="42" height="320" rx="18" fill="#9333ea" />
+          <rect x="203" y="405" width="42" height="320" rx="18" fill="#9333ea" />
         </g>
       </g>
     </svg>

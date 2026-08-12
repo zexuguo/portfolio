@@ -38,7 +38,13 @@ export default function ScrollStory() {
         });
         const baseEl = svg.querySelector<SVGGElement>("#figura-base");
 
-        gsap.set(camera, { x: 0, y: 0, scale: 1, transformOrigin: "0px 0px" });
+        // GSAP anchors an SVG element's transformOrigin relative to that
+        // element's own getBBox(), not the SVG's viewBox origin. Compensate
+        // so "0,0" in our zoom math really means the viewBox's (0,0).
+        const camBBox = camera.getBBox();
+        const origin = `${-camBBox.x}px ${-camBBox.y}px`;
+
+        gsap.set(camera, { x: 0, y: 0, scale: 1, transformOrigin: origin });
         gsap.set(ZONES.map((z) => zoneEls[z]).filter(Boolean) as SVGGElement[], {
           opacity: 1,
           filter: "blur(0px)",
@@ -68,7 +74,7 @@ export default function ScrollStory() {
 
           tl.to(
             camera,
-            { x: tx, y: ty, scale: S, transformOrigin: "0px 0px", duration: 1 },
+            { x: tx, y: ty, scale: S, transformOrigin: origin, duration: 1 },
             i
           );
 
@@ -142,7 +148,7 @@ export default function ScrollStory() {
       >
         <div
           ref={stageRef}
-          className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center"
+          className="h-screen w-full overflow-hidden flex items-center justify-center"
         >
           <Silhouette className="h-[80vh] w-auto text-neutral-800 dark:text-neutral-100" />
           {SECTIONS.map((section, i) => (
