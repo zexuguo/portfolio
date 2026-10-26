@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Figure3D, { rigFor, type CameraRig } from "./Figure3D";
+import Figure, { rigFor, type CameraRig } from "./Figure";
 import SectionContent from "./SectionContent";
 import { SECTIONS } from "@/data/sections";
 
@@ -12,7 +12,7 @@ export default function ScrollStory() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const textRefs = useRef<(HTMLDivElement | null)[]>([]);
-  // GSAP tweens these numbers; Figure3D reads them every frame.
+  // GSAP tweens these numbers; Figure reads them every frame.
   const rigRef = useRef<CameraRig>(rigFor("intro", null));
 
   useLayoutEffect(() => {
@@ -147,7 +147,7 @@ export default function ScrollStory() {
           ref={stageRef}
           className="relative h-screen w-full overflow-hidden flex items-center justify-center"
         >
-          <Figure3D rig={rigRef} className="absolute inset-0" />
+          <Figure rig={rigRef} className="absolute inset-0" />
           {SECTIONS.map((section, i) => (
             <div
               key={section.id}
