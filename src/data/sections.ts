@@ -9,7 +9,7 @@ export interface Project {
 
 export interface Section {
   id: SectionId;
-  /** body part the 3D camera frames (see VIEWS in Figure3D) */
+  /** body part the camera frames (see VIEWS in Figure) */
   target: SectionId;
   eyebrow: string;
   title: string;
