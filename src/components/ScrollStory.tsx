@@ -50,14 +50,52 @@ export default function ScrollStory() {
           filter: "blur(0px)",
         });
 
+        // Each section owns one unit of timeline (= one viewport of scroll):
+        //   0.00-0.60  camera travels to the target
+        //   0.35-0.65  text slides in
+        //   0.65-0.90  hold: camera still, text fully visible (snap lands here)
+        //   0.90-1.00  text fades out before the next move
+        const N = SECTIONS.length;
+        const CAMERA = 0.6;
+        const TEXT_IN = 0.35;
+        const TEXT_OUT = 0.9;
+        const REST = 0.78;
+        const NUDGE = 0.15;
+        const snapPoints = [0, ...SECTIONS.map((_, i) => (i + REST) / N), 1];
+
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: container,
             start: "top top",
-            end: "+=" + SECTIONS.length * window.innerHeight,
+            end: "+=" + N * window.innerHeight,
             scrub: 1,
             pin: stage,
             anticipatePin: 1,
+            // Settle on each point of interest instead of flying past it.
+            snap: {
+              // Snap from where the user actually stopped, not GSAP's
+              // velocity-projected end, so a fast fling or an anchor jump
+              // doesn't overshoot several sections. One point per gesture.
+              snapTo: (projected: number, self?: ScrollTrigger) => {
+                const p = self?.progress ?? projected;
+                const dir = self?.direction ?? 1;
+                // Last point behind the user and next one ahead, in scroll direction.
+                const behind =
+                  dir > 0
+                    ? [...snapPoints].reverse().find((s) => s <= p) ?? 0
+                    : snapPoints.find((s) => s >= p) ?? 1;
+                const ahead =
+                  dir > 0
+                    ? snapPoints.find((s) => s > p) ?? 1
+                    : [...snapPoints].reverse().find((s) => s < p) ?? 0;
+                // A nudge (< ~15% of a section) settles back; anything more
+                // carries on to the next point of interest.
+                return Math.abs(p - behind) < NUDGE / N ? behind : ahead;
+              },
+              duration: { min: 0.25, max: 0.7 },
+              delay: 0.12,
+              ease: "power2.inOut",
+            },
           },
           defaults: { ease: "power2.inOut" },
         });
@@ -74,7 +112,7 @@ export default function ScrollStory() {
 
           tl.to(
             camera,
-            { x: tx, y: ty, scale: S, transformOrigin: origin, duration: 1 },
+            { x: tx, y: ty, scale: S, transformOrigin: origin, duration: CAMERA },
             i
           );
 
@@ -82,13 +120,13 @@ export default function ScrollStory() {
             const el = zoneEls[z];
             if (!el) return;
             if (z === section.target) {
-              tl.to(el, { opacity: 1, filter: "blur(0px)", duration: 0.5 }, i);
+              tl.to(el, { opacity: 1, filter: "blur(0px)", duration: 0.4 }, i);
             } else {
-              tl.to(el, { opacity: 0.12, filter: "blur(5px)", duration: 0.5 }, i);
+              tl.to(el, { opacity: 0.12, filter: "blur(5px)", duration: 0.4 }, i);
             }
           });
           if (baseEl) {
-            tl.to(baseEl, { opacity: 0.35, duration: 0.5 }, i);
+            tl.to(baseEl, { opacity: 0.35, duration: 0.4 }, i);
           }
 
           const textEl = textRefs.current[i];
@@ -97,16 +135,19 @@ export default function ScrollStory() {
             tl.fromTo(
               textEl,
               { autoAlpha: 0, x: dir },
-              { autoAlpha: 1, x: 0, duration: 0.45 },
-              i + 0.12
+              { autoAlpha: 1, x: 0, duration: 0.3 },
+              i + TEXT_IN
             );
-            if (i < SECTIONS.length - 1) {
+            if (i < N - 1) {
               // keep the final section's content (with the CTA) visible instead
               // of fading it out — there's nothing left to scroll to after it.
-              tl.to(textEl, { autoAlpha: 0, duration: 0.3 }, i + 0.82);
+              tl.to(textEl, { autoAlpha: 0, duration: 1 - TEXT_OUT }, i + TEXT_OUT);
             }
           }
         });
+
+        // Pad the timeline to exactly N units so snap points map 1:1 to sections.
+        tl.set({}, {}, N);
 
         return () => {
           tl.kill();

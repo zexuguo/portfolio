@@ -61,12 +61,6 @@ export const SECTIONS: Section[] = [
     side: "right",
     projects: [
       {
-        name: "OpsHub OS",
-        description: "Plataforma SaaS de gestión empresarial. Tech lead del proyecto.",
-        stack: ["Next.js", "TypeScript", "Postgres"],
-        // TODO: enlace (repo o demo)
-      },
-      {
         name: "Granja del Código",
         description: "Juego para aprender Java y C programando un dron granjero. Compila el código de verdad (javac y gcc) en un sandbox, con cuentas, progresión, retos tipo Moulinette de 42 y liga.",
         stack: ["JavaScript", "Three.js", "Postgres", "Vercel"],
