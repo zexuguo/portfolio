@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Zexu Guo — Portfolio",
   description:
-    "Portfolio personal interactivo — scroll-driven storytelling sobre quién soy, lo que sé, lo que construyo y hacia dónde voy.",
+    "Zexu Guo, desarrollador junior en Barcelona. Quién soy, lo que sé, lo que construyo y hacia dónde voy.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

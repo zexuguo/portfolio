@@ -9,10 +9,8 @@ export interface Project {
 
 export interface Section {
   id: SectionId;
-  /** id of the SVG <g> this section's camera zooms into */
+  /** body part the camera frames (see VIEWS in Figure) */
   target: SectionId;
-  /** how tight the zoom is on the target group (higher = closer) */
-  zoom: number;
   eyebrow: string;
   title: string;
   /** placeholder body copy — replace with real voice later */
@@ -27,7 +25,6 @@ export const SECTIONS: Section[] = [
   {
     id: "corazon",
     target: "corazon",
-    zoom: 2.4,
     eyebrow: "01 — El porqué",
     title: "Quién soy",
     // Borrador hecho a partir de tus notas y tu CV: revísalo y ajústalo a tu voz.
@@ -37,7 +34,6 @@ export const SECTIONS: Section[] = [
   {
     id: "cerebro",
     target: "cerebro",
-    zoom: 2.0,
     eyebrow: "02 — Lo técnico",
     title: "Lo que sé",
     body: "Compagino el CFGS de Desarrollo de Aplicaciones Multiplataforma (DAM) en el ITIC Barcelona con el cursus de 42 Barcelona: C y Unix, peer-to-peer y sin profesores, ahora con Libft. Antes, CFGM en Sistemes Microinformàtics i Xarxes (SMX) en l'Escola del Treball. Idiomas: español y catalán nativos, inglés B1-B2 y chino A2.",
@@ -54,18 +50,11 @@ export const SECTIONS: Section[] = [
   {
     id: "manos",
     target: "manos",
-    zoom: 0.68,
     eyebrow: "03 — Lo que construyo",
     title: "Proyectos",
     body: "Una muestra de lo que he construido — de menor a mayor escala.",
     side: "right",
     projects: [
-      {
-        name: "OpsHub OS",
-        description: "Plataforma SaaS de gestión empresarial. Tech lead del proyecto.",
-        stack: ["Next.js", "TypeScript", "Postgres"],
-        // TODO: enlace (repo o demo)
-      },
       {
         name: "Granja del Código",
         description: "Juego para aprender Java y C programando un dron granjero. Compila el código de verdad (javac y gcc) en un sandbox, con cuentas, progresión, retos tipo Moulinette de 42 y liga.",
@@ -88,7 +77,6 @@ export const SECTIONS: Section[] = [
   {
     id: "piernas",
     target: "piernas",
-    zoom: 1.9,
     eyebrow: "04 — Disciplina",
     title: "Constancia",
     body: "Entreno para triatlón — objetivo a largo plazo: Ironman, empezando por distancia Sprint. Combino gimnasio, running y ciclismo. La misma disciplina que aplico entrenando la aplico aprendiendo a programar desde cero.",
@@ -97,7 +85,6 @@ export const SECTIONS: Section[] = [
   {
     id: "ojos",
     target: "ojos",
-    zoom: 4.2,
     eyebrow: "05 — Adelante",
     title: "Hacia dónde voy",
     body: "Busco prácticas o un primer puesto junior en remoto, abierto a desarrollo web, backend o sistemas. Mientras, sigo avanzando en el cursus de 42 y en DAM, y compito en hackathons como NASA Space Apps y Talent Arena. Si tienes un proyecto donde pueda aprender rápido y aportar desde el primer día, hablemos.",
