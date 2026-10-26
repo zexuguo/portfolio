@@ -3,28 +3,57 @@ import type { Section } from "@/data/sections";
 export default function SectionContent({
   section,
   className = "",
+  compact = false,
 }: {
   section: Section;
   className?: string;
+  /** tighter spacing for the pinned desktop stage */
+  compact?: boolean;
 }) {
+  // "Lo que sé" lists skills, not projects: show them as a compact list
+  const isSkillList = section.id === "cerebro";
   return (
     <div className={className}>
-      <p className="text-sm font-medium tracking-wide text-neutral-500 dark:text-neutral-400 uppercase mb-3">
+      <p className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 mb-4">
         {section.eyebrow}
       </p>
       <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4 text-neutral-900 dark:text-neutral-50">
         {section.title}
       </h2>
-      <p className="text-base md:text-lg leading-relaxed text-neutral-600 dark:text-neutral-300 max-w-prose">
+      <p
+        className={`leading-relaxed text-neutral-600 dark:text-neutral-300 max-w-prose ${
+          compact ? "text-base lg:text-[17px]" : "text-base md:text-lg"
+        }`}
+      >
         {section.body}
       </p>
 
-      {section.projects && (
-        <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {section.projects && isSkillList ? (
+        // short skill list: name + one line, no cards
+        <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3.5 border-t border-neutral-200 dark:border-neutral-800 pt-5">
+          {section.projects.map((p) => (
+            <div key={p.name}>
+              <dt className="text-sm font-medium text-neutral-900 dark:text-neutral-50">{p.name}</dt>
+              <dd className="text-[13px] leading-snug text-neutral-500 dark:text-neutral-400 mt-0.5">
+                {p.description}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+
+      {section.projects && !isSkillList && (
+        <ul
+          className={`grid grid-cols-1 sm:grid-cols-2 [&>li:last-child:nth-child(odd)]:sm:col-span-2 ${
+            compact ? "mt-5 gap-2.5" : "mt-6 gap-4"
+          }`}
+        >
           {section.projects.map((p) => (
             <li
               key={p.name}
-              className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/60 backdrop-blur p-4"
+              className={`rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/70 backdrop-blur ${
+                compact ? "p-3.5" : "p-4"
+              }`}
             >
               {p.href ? (
                 <a
@@ -40,10 +69,10 @@ export default function SectionContent({
                   {p.name}
                 </span>
               )}
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
+              <p className={`text-neutral-600 dark:text-neutral-400 mt-1 ${compact ? "text-[13px] leading-snug" : "text-sm"}`}>
                 {p.description}
               </p>
-              <div className="flex flex-wrap gap-1.5 mt-3">
+              <div className={`flex flex-wrap gap-1.5 ${compact ? "mt-2" : "mt-3"}`}>
                 {p.stack.map((s) => (
                   <span
                     key={s}
