@@ -3,19 +3,17 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Silhouette from "./Silhouette";
+import Figure3D, { rigFor, type CameraRig } from "./Figure3D";
 import SectionContent from "./SectionContent";
-import { SECTIONS, type SectionId } from "@/data/sections";
-
-const ZONES: SectionId[] = ["corazon", "cerebro", "manos", "piernas", "ojos"];
-const VIEWBOX_W = 400;
-const VIEWBOX_H = 800;
+import { SECTIONS } from "@/data/sections";
 
 export default function ScrollStory() {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const textRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // GSAP tweens these numbers; Figure3D reads them every frame.
+  const rigRef = useRef<CameraRig>(rigFor("intro", null));
 
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -26,29 +24,9 @@ export default function ScrollStory() {
       mm.add("(min-width: 768px)", () => {
         const container = containerRef.current;
         const stage = stageRef.current;
-        const svg = stage?.querySelector<SVGSVGElement>("svg") ?? null;
-        if (!svg || !container || !stage) return;
-
-        const camera = svg.querySelector<SVGGElement>("#camera");
-        if (!camera) return;
-
-        const zoneEls: Record<string, SVGGElement | null> = {};
-        ZONES.forEach((z) => {
-          zoneEls[z] = svg.querySelector<SVGGElement>(`#${z}`);
-        });
-        const baseEl = svg.querySelector<SVGGElement>("#figura-base");
-
-        // GSAP anchors an SVG element's transformOrigin relative to that
-        // element's own getBBox(), not the SVG's viewBox origin. Compensate
-        // so "0,0" in our zoom math really means the viewBox's (0,0).
-        const camBBox = camera.getBBox();
-        const origin = `${-camBBox.x}px ${-camBBox.y}px`;
-
-        gsap.set(camera, { x: 0, y: 0, scale: 1, transformOrigin: origin });
-        gsap.set(ZONES.map((z) => zoneEls[z]).filter(Boolean) as SVGGElement[], {
-          opacity: 1,
-          filter: "blur(0px)",
-        });
+        if (!container || !stage) return;
+        const rig = rigRef.current;
+        Object.assign(rig, rigFor("intro", null));
 
         // Each section owns one unit of timeline (= one viewport of scroll):
         //   0.00-0.60  camera travels to the target
@@ -101,40 +79,11 @@ export default function ScrollStory() {
         });
 
         SECTIONS.forEach((section, i) => {
-          const targetEl = zoneEls[section.target];
-          if (!targetEl) return;
-          const bbox = targetEl.getBBox();
-          const cx = bbox.x + bbox.width / 2;
-          const cy = bbox.y + bbox.height / 2;
-          const S = section.zoom;
-          const tx = VIEWBOX_W / 2 - S * cx;
-          const ty = VIEWBOX_H / 2 - S * cy;
-
           tl.to(
-            camera,
-            { x: tx, y: ty, scale: S, transformOrigin: origin, duration: CAMERA },
+            rig,
+            { ...rigFor(section.target, section.side), duration: CAMERA },
             i
           );
-
-          // The figure is solid, so out-of-focus parts are dimmed and blurred
-          // rather than faded out (a fade leaves holes in the body). The eyes
-          // live inside the head, so head and eyes are always in focus together
-          // (the zoom alone says which one the section is about).
-          ZONES.forEach((z) => {
-            const el = zoneEls[z];
-            if (!el) return;
-            const t = section.target;
-            let state = { opacity: 0.32, filter: "blur(3px)" };
-            const sameHead =
-              (t === "cerebro" && z === "ojos") || (t === "ojos" && z === "cerebro");
-            if (z === t || sameHead) {
-              state = { opacity: 1, filter: "blur(0px)" };
-            }
-            tl.to(el, { ...state, duration: 0.4 }, i);
-          });
-          if (baseEl) {
-            tl.to(baseEl, { opacity: 0.35, duration: 0.4 }, i);
-          }
 
           const textEl = textRefs.current[i];
           if (textEl) {
@@ -196,9 +145,9 @@ export default function ScrollStory() {
       >
         <div
           ref={stageRef}
-          className="h-screen w-full overflow-hidden flex items-center justify-center"
+          className="relative h-screen w-full overflow-hidden flex items-center justify-center"
         >
-          <Silhouette className="h-[80vh] w-auto text-neutral-800 dark:text-neutral-100" />
+          <Figure3D rig={rigRef} className="absolute inset-0" />
           {SECTIONS.map((section, i) => (
             <div
               key={section.id}
