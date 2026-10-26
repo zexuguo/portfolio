@@ -116,14 +116,21 @@ export default function ScrollStory() {
             i
           );
 
+          // The figure is solid, so out-of-focus parts are dimmed and blurred
+          // rather than faded out (a fade leaves holes in the body). The eyes
+          // live inside the head, so head and eyes are always in focus together
+          // (the zoom alone says which one the section is about).
           ZONES.forEach((z) => {
             const el = zoneEls[z];
             if (!el) return;
-            if (z === section.target) {
-              tl.to(el, { opacity: 1, filter: "blur(0px)", duration: 0.4 }, i);
-            } else {
-              tl.to(el, { opacity: 0.12, filter: "blur(5px)", duration: 0.4 }, i);
+            const t = section.target;
+            let state = { opacity: 0.32, filter: "blur(3px)" };
+            const sameHead =
+              (t === "cerebro" && z === "ojos") || (t === "ojos" && z === "cerebro");
+            if (z === t || sameHead) {
+              state = { opacity: 1, filter: "blur(0px)" };
             }
+            tl.to(el, { ...state, duration: 0.4 }, i);
           });
           if (baseEl) {
             tl.to(baseEl, { opacity: 0.35, duration: 0.4 }, i);
@@ -198,7 +205,7 @@ export default function ScrollStory() {
               ref={(el) => {
                 textRefs.current[i] = el;
               }}
-              className={`opacity-0 invisible absolute top-1/2 -translate-y-1/2 w-[min(90vw,28rem)] ${
+              className={`opacity-0 invisible absolute top-1/2 -translate-y-1/2 w-[min(90vw,26rem)] ${
                 section.side === "left"
                   ? "left-6 lg:left-16"
                   : "right-6 lg:right-16"

@@ -27,7 +27,7 @@ export const SECTIONS: Section[] = [
   {
     id: "corazon",
     target: "corazon",
-    zoom: 2.4,
+    zoom: 1.6,
     eyebrow: "01 — El porqué",
     title: "Quién soy",
     // Borrador hecho a partir de tus notas y tu CV: revísalo y ajústalo a tu voz.
@@ -91,7 +91,7 @@ export const SECTIONS: Section[] = [
   {
     id: "ojos",
     target: "ojos",
-    zoom: 4.2,
+    zoom: 3.6,
     eyebrow: "05 — Adelante",
     title: "Hacia dónde voy",
     body: "Busco prácticas o un primer puesto junior en remoto, abierto a desarrollo web, backend o sistemas. Mientras, sigo avanzando en el cursus de 42 y en DAM, y compito en hackathons como NASA Space Apps y Talent Arena. Si tienes un proyecto donde pueda aprender rápido y aportar desde el primer día, hablemos.",
