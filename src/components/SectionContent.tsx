@@ -26,12 +26,20 @@ export default function SectionContent({
               key={p.name}
               className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/60 backdrop-blur p-4"
             >
-              <a
-                href={p.href ?? "#"}
-                className="font-medium text-neutral-900 dark:text-neutral-50 hover:underline underline-offset-4"
-              >
-                {p.name}
-              </a>
+              {p.href ? (
+                <a
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-neutral-900 dark:text-neutral-50 hover:underline underline-offset-4"
+                >
+                  {p.name} ↗
+                </a>
+              ) : (
+                <span className="font-medium text-neutral-900 dark:text-neutral-50">
+                  {p.name}
+                </span>
+              )}
               <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
                 {p.description}
               </p>
@@ -52,7 +60,9 @@ export default function SectionContent({
 
       {section.cta && (
         <div className="mt-8 flex flex-wrap gap-3">
-          {section.cta.map((c, i) => (
+          {section.cta
+            .filter((c): c is { label: string; href: string } => Boolean(c.href))
+            .map((c, i) => (
             <a
               key={c.label}
               href={c.href}
