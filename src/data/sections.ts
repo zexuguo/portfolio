@@ -30,8 +30,8 @@ export const SECTIONS: Section[] = [
     zoom: 2.4,
     eyebrow: "01 — El porqué",
     title: "Quién soy",
-    // Borrador hecho a partir de tus notas: revísalo y ajústalo a tu voz.
-    body: "Soy Zexu Guo, de Barcelona. Empecé por el hardware y las redes y he acabado enganchado a construir software. Aprendo haciendo: casi todo lo que sé lo he sacado de montar proyectos propios, desde un juego para aprender a programar hasta CRMs para pequeños negocios. Me gusta entender cómo funcionan las cosas por dentro y no dejarlas a medias.",
+    // Borrador hecho a partir de tus notas y tu CV: revísalo y ajústalo a tu voz.
+    body: "Soy Zexu Guo, de Barcelona. Empecé por el hardware y las redes, y ya he trabajado como técnico de soporte y de sistemas en Barcelona y en Portugal (Erasmus). Desde ahí he acabado enganchado a construir software. Aprendo haciendo: casi todo lo que sé lo he sacado de montar proyectos propios, desde un juego para aprender a programar hasta CRMs para pequeños negocios.",
     side: "right",
   },
   {
@@ -100,13 +100,12 @@ export const SECTIONS: Section[] = [
     zoom: 4.2,
     eyebrow: "05 — Adelante",
     title: "Hacia dónde voy",
-    // Borrador: falta decir qué tipo de rol o prácticas buscas.
-    body: "A corto plazo: avanzar en el cursus de 42 mientras termino DAM, y competir en hackathons como NASA Space Apps y Talent Arena. A medio plazo, convertir lo que construyo en productos que usen pequeños negocios de verdad. Si tienes un proyecto o una oportunidad donde pueda aprender rápido y aportar, hablemos.",
+    body: "Busco prácticas o un primer puesto junior en remoto, abierto a desarrollo web, backend o sistemas. Mientras, sigo avanzando en el cursus de 42 y en DAM, y compito en hackathons como NASA Space Apps y Talent Arena. Si tienes un proyecto donde pueda aprender rápido y aportar desde el primer día, hablemos.",
     side: "right",
     cta: [
-      { label: "Contactar" }, // TODO: href: "mailto:<tu email>"
+      { label: "Contactar", href: "mailto:zexuguo34@gmail.com" },
       { label: "LinkedIn", href: "https://www.linkedin.com/in/zexu-guo-b4517740a/" },
-      { label: "Descargar CV" }, // TODO: subir public/cv.pdf y poner href: "/cv.pdf"
+      { label: "Descargar CV", href: "/cv-zexu-guo.pdf" },
     ],
   },
 ];
