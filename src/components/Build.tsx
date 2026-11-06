@@ -7,8 +7,8 @@ import { pedirConstruccion } from "@/lib/swarm";
 
 /**
  * Bloque que construyen los cursores del enjambre (los mismos que orbitan).
- * El contenido está siempre presente con poca opacidad (.15) y sube a 1 mientras
- * 2–3 cursores lo «dibujan» (≈0,5 s). Si el scroll es rápido o no hay cursores
+ * El contenido está siempre presente con poca opacidad (.25) y sube a 1 mientras
+ * 2–3 cursores lo «dibujan» (≈1 s). Si el scroll es rápido o no hay cursores
  * libres, salta al estado final. Con prefers-reduced-motion no se anima nada.
  * Código propio; idea inspirada en Swarm de Joel Califa (sin copiar código).
  */
@@ -34,7 +34,7 @@ export default function Build({ children, kind = "rect", delay = 0, play, start 
   const setP = (p: number) => {
     const c = content.current;
     if (!c || done.current) return;
-    c.style.opacity = String(0.15 + 0.85 * p);
+    c.style.opacity = String(0.25 + 0.75 * p);
     c.style.transform = p < 1 ? `translateY(${(1 - p) * 5}px)` : "";
   };
   const reveal = () => {
@@ -59,7 +59,7 @@ export default function Build({ children, kind = "rect", delay = 0, play, start 
     if (done.current) return;
     if (instant) return reveal();
     // red de seguridad: si algo falla, el contenido se muestra igualmente
-    timer.current = setTimeout(reveal, 1800 + delay * 1000);
+    timer.current = setTimeout(reveal, 2800 + delay * 1000);
     pedirConstruccion({ el: root.current!, kind, delay, onProgress: setP, onDone: reveal });
   };
 
