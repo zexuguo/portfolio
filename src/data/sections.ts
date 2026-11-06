@@ -52,27 +52,9 @@ export const SECTIONS: Section[] = [
     target: "manos",
     eyebrow: "03 — Lo que construyo",
     title: "Proyectos",
-    body: "Una muestra de lo que he construido — de menor a mayor escala.",
+    body: "Aplicaciones web, un juego educativo, un bot de trading en cuenta demo y un prototipo de vídeo con IA. Debajo tienes cada proyecto con su imagen.",
     side: "right",
-    projects: [
-      {
-        name: "Granja del Código",
-        description: "Juego para aprender Java y C programando un dron granjero. Compila el código de verdad (javac y gcc) en un sandbox, con cuentas, progresión, retos tipo Moulinette de 42 y liga.",
-        stack: ["JavaScript", "Three.js", "Postgres", "Vercel"],
-        href: "https://granja-codigo.vercel.app",
-      },
-      {
-        name: "Taller CRM",
-        description: "CRM para talleres de reparación de móviles: clientes, reparaciones, pagos, resguardo con QR y seguimiento público para el cliente. Multi-taller.",
-        stack: ["Next.js", "React", "Supabase"],
-        // TODO: ¿enlazar la web en producción o un repo/demo?
-      },
-      {
-        name: "Trading Bot",
-        description: "Bot de cripto en modo demo donde un LLM analiza el mercado y decide, siempre filtrado por una capa de riesgo escrita en código que no puede saltarse.",
-        stack: ["Python", "OKX API", "Claude API"],
-      },
-    ],
+    cta: [{ label: "Ver proyectos", href: "#proyectos" }],
   },
   {
     id: "piernas",

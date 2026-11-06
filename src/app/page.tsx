@@ -1,8 +1,11 @@
 import ScrollStory from "@/components/ScrollStory";
+import Proyectos from "@/components/Proyectos";
+import SwarmCursors from "@/components/SwarmCursors";
 
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 bg-neutral-50 dark:bg-neutral-950">
+      <SwarmCursors />
       <header className="fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-6 md:px-10 py-4 backdrop-blur-md bg-neutral-50/70 dark:bg-neutral-950/70 border-b border-neutral-200/60 dark:border-neutral-800/60">
         <a
           href="#historia"
@@ -11,6 +14,12 @@ export default function Home() {
           Zexu Guo
         </a>
         <nav className="flex items-center gap-6 font-mono text-xs uppercase tracking-[0.15em]">
+          <a
+            href="#proyectos"
+            className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+          >
+            Proyectos
+          </a>
           <a
             href="/cv-zexu-guo.pdf"
             className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
@@ -28,6 +37,7 @@ export default function Home() {
 
       <main className="flex-1">
         <ScrollStory />
+        <Proyectos />
 
         <footer className="py-12 px-6 flex flex-col sm:flex-row items-center justify-between gap-3 max-w-6xl mx-auto w-full border-t border-neutral-200 dark:border-neutral-800">
           <p className="font-mono text-xs text-neutral-500">© {new Date().getFullYear()} Zexu Guo</p>
