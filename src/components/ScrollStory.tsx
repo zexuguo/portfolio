@@ -168,7 +168,7 @@ export default function ScrollStory() {
             ref={heroRef}
             className="absolute top-1/2 -translate-y-1/2 left-10 lg:left-20 xl:left-28 w-[min(44vw,32rem)]"
           >
-            <Hero />
+            <Hero play={active === 0} />
             <ScrollHint className="mt-12" />
           </div>
 
@@ -182,7 +182,7 @@ export default function ScrollStory() {
                 section.side === "left" ? "left-10 lg:left-20 xl:left-28" : "right-16 lg:right-24 xl:right-32"
               }`}
             >
-              <SectionContent section={section} compact />
+              <SectionContent section={section} compact play={active === i + 1} />
             </div>
           ))}
 

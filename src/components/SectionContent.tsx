@@ -1,36 +1,46 @@
 import type { Section } from "@/data/sections";
+import Build from "./Build";
 
 export default function SectionContent({
   section,
   className = "",
   compact = false,
+  play,
 }: {
   section: Section;
   className?: string;
   /** tighter spacing for the pinned desktop stage */
   compact?: boolean;
+  /** modo controlado (escritorio): construye cuando la sección está activa */
+  play?: boolean;
 }) {
+  const seed = section.id;
   // "Lo que sé" lists skills, not projects: show them as a compact list
   const isSkillList = section.id === "cerebro";
   return (
     <div className={className}>
-      <p className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 mb-4">
-        {section.eyebrow}
-      </p>
-      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4 text-neutral-900 dark:text-neutral-50">
-        {section.title}
-      </h2>
-      <p
-        className={`leading-relaxed text-neutral-600 dark:text-neutral-300 max-w-prose ${
-          compact ? "text-base lg:text-[17px]" : "text-base md:text-lg"
-        }`}
-      >
-        {section.body}
-      </p>
+      <Build kind="text" seed={seed} play={play}>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 mb-4">
+          {section.eyebrow}
+        </p>
+        <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4 text-neutral-900 dark:text-neutral-50">
+          {section.title}
+        </h2>
+      </Build>
+      <Build seed={seed + "b"} delay={0.5} play={play}>
+        <p
+          className={`leading-relaxed text-neutral-600 dark:text-neutral-300 max-w-prose ${
+            compact ? "text-base lg:text-[17px]" : "text-base md:text-lg"
+          }`}
+        >
+          {section.body}
+        </p>
+      </Build>
 
       {section.projects && isSkillList ? (
         // short skill list: name + one line, no cards
-        <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3.5 border-t border-neutral-200 dark:border-neutral-800 pt-5">
+        <Build seed={seed + "c"} delay={1.0} play={play} className="mt-6">
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-3.5 border-t border-neutral-200 dark:border-neutral-800 pt-5">
           {section.projects.map((p) => (
             <div key={p.name}>
               <dt className="text-sm font-medium text-neutral-900 dark:text-neutral-50">{p.name}</dt>
@@ -40,6 +50,7 @@ export default function SectionContent({
             </div>
           ))}
         </dl>
+        </Build>
       ) : null}
 
       {section.projects && !isSkillList && (
@@ -88,7 +99,8 @@ export default function SectionContent({
       )}
 
       {section.cta && (
-        <div className="mt-8 flex flex-wrap gap-3">
+        <Build seed={seed + "d"} delay={1.0} play={play} className="mt-8">
+        <div className="flex flex-wrap gap-3">
           {section.cta
             .filter((c): c is { label: string; href: string } => Boolean(c.href))
             .map((c, i) => (
@@ -105,6 +117,7 @@ export default function SectionContent({
             </a>
           ))}
         </div>
+        </Build>
       )}
     </div>
   );

@@ -31,3 +31,8 @@ body {
   80% { opacity: 0; transform: translate(-50%, 10px); }
   100% { opacity: 0; transform: translate(-50%, 10px); }
 }
+
+/* Bloques que construyen los cursores: ocultos hasta que Build los muestra (no con reduced-motion) */
+@media (prefers-reduced-motion: no-preference) {
+  .build-init { opacity: 0; }
+}

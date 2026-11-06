@@ -13,7 +13,7 @@ export default function Home() {
         >
           Zexu Guo
         </a>
-        <nav className="flex items-center gap-6 font-mono text-xs uppercase tracking-[0.15em]">
+        <nav className="flex items-center gap-4 sm:gap-6 font-mono text-[11px] sm:text-xs uppercase tracking-[0.08em] sm:tracking-[0.15em]">
           <a
             href="#proyectos"
             className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
