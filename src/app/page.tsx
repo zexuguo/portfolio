@@ -5,6 +5,7 @@ import SobreMi from "@/components/SobreMi";
 import Contacto from "@/components/Contacto";
 import IndiceTopicos from "@/components/IndiceTopicos";
 import SwarmCursors from "@/components/SwarmCursors";
+import ParadasScroll from "@/components/ParadasScroll";
 import { CV_URL } from "@/data/contenido";
 
 const link = "text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors";
@@ -19,6 +20,7 @@ export default function Home() {
         Saltar al contenido
       </a>
       <SwarmCursors />
+      <ParadasScroll />
       <IndiceTopicos />
       <header className="fixed left-0 right-0 top-0 z-20 flex items-center justify-between border-b border-neutral-200/60 bg-neutral-50/70 px-6 py-4 backdrop-blur-md dark:border-neutral-800/60 dark:bg-neutral-950/70 md:px-10">
         <a href="#presentacion" className="font-mono text-sm tracking-tight text-neutral-800 dark:text-neutral-200">Zexu Guo</a>
