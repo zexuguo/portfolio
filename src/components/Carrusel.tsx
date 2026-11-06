@@ -90,7 +90,6 @@ export default function Carrusel() {
         ref={track}
         tabIndex={0}
         aria-label="Lista de proyectos; usa las flechas izquierda y derecha"
-        aria-live={rotando ? "off" : "polite"}
         className={`relative flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${focus}`}
       >
         {PROYECTOS.map((p, i) => (
@@ -140,6 +139,7 @@ export default function Carrusel() {
         ))}
       </ul>
 
+      <p className="sr-only" aria-live={rotando ? "off" : "polite"}>{`Proyecto ${activo + 1} de ${n}: ${PROYECTOS[activo].nombre}`}</p>
       <div className="mt-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <button type="button" className={btn} aria-label="Proyecto anterior" onClick={() => manual(activo - 1)}>←</button>
