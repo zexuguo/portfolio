@@ -64,7 +64,7 @@ export default function Build({ children, kind = "rect", delay = 0, play, start 
   };
 
   useLayoutEffect(() => {
-    if (reduced()) return;
+    if (reduced()) { content.current?.classList.remove("build-init"); return; }
     gsap.registerPlugin(ScrollTrigger);
     reset();
     if (play !== undefined) return;

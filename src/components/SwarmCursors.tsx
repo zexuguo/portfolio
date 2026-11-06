@@ -13,7 +13,7 @@ import { CURSORES, swarmBridge, type BuildRequest } from "@/lib/swarm";
  * Capa fija, sin eventos, aria-hidden. Táctil: solo se ven mientras construyen.
  * prefers-reduced-motion: 5 cursores estáticos y ninguna construcción.
  */
-const SIZE = 18;
+const SIZE = 24;
 const SPRING = [0.08, 0.1, 0.12, 0.09, 0.14, 0.11, 0.13];
 const FLY = 170, DRAG = 260, CLICK = 70; // ms → una construcción ≈ 0,5 s
 const clamp = (v: number, a: number, b: number) => Math.min(Math.max(v, a), b);
@@ -37,7 +37,7 @@ function arrow(ctx: CanvasRenderingContext2D, x: number, y: number, color: strin
   ctx.moveTo(0, 0); ctx.lineTo(0, 15 * s); ctx.lineTo(4 * s, 11.5 * s); ctx.lineTo(7 * s, 17 * s);
   ctx.lineTo(9.5 * s, 15.8 * s); ctx.lineTo(6.6 * s, 10.4 * s); ctx.lineTo(11.5 * s, 10.4 * s); ctx.closePath();
   ctx.fillStyle = color; ctx.fill();
-  ctx.shadowColor = "transparent"; ctx.lineWidth = 1.5; ctx.strokeStyle = "#fff"; ctx.lineJoin = "round"; ctx.stroke();
+  ctx.shadowColor = "transparent"; ctx.lineJoin = "round"; ctx.lineWidth = 4; ctx.strokeStyle = "rgba(0,0,0,.45)"; ctx.stroke(); ctx.lineWidth = 2; ctx.strokeStyle = "#fff"; ctx.stroke();
   ctx.restore();
 }
 
@@ -155,7 +155,7 @@ export default function SwarmCursors() {
         const [px, py] = pos(tx, ty);
         if (el < FLY) { const f = ease(el / FLY); c.x = c.fx + (px - c.fx) * f; c.y = c.fy + (py - c.fy) * f; }
         else { c.x = px; c.y = py; }
-        c.alpha += (0.95 - c.alpha) * 0.4;
+        c.alpha += (1 - c.alpha) * 0.4;
         c.scale = !text && el > FLY + dur ? 0.8 + 0.2 * Math.abs((el - FLY - dur) / CLICK - 0.5) * 2 : 1; // clic
       });
       t.req.onProgress(el < FLY ? 0 : e);
@@ -186,7 +186,7 @@ export default function SwarmCursors() {
         arrow(ctx, c.x, c.y, CURSORES[i].color, tilt, c.alpha, c.scale);
         if (c.task) { // nombre: a la derecha, o a la izquierda si no cabe
           const w = ctx.measureText(CURSORES[i].name).width + 10;
-          pill(ctx, CURSORES[i].name, c.x + 14 + w + 4 > vw ? c.x - w - 4 : c.x + 14, c.y + 16, CURSORES[i].color, c.alpha, vw);
+          pill(ctx, CURSORES[i].name, c.x + 18 + w + 4 > vw ? c.x - w - 4 : c.x + 18, c.y + 20, CURSORES[i].color, c.alpha, vw);
         }
       });
     };
@@ -208,7 +208,7 @@ export default function SwarmCursors() {
         c.vx = (c.vx + (anchorX + Math.cos(c.ang) * r - c.x) * k) * 0.82;
         c.vy = (c.vy + (anchorY + Math.sin(c.ang) * r - c.y) * k) * 0.82;
         c.x += c.vx * dt; c.y += c.vy * dt;
-        const target = touch ? 0 : mouse.over ? 0.35 : 0.85; // táctil: ocultos fuera de las construcciones
+        const target = touch ? 0 : mouse.over ? 0.6 : 1; // táctil: ocultos fuera de las construcciones
         c.alpha += (target - c.alpha) * 0.12;
         if (Math.abs(c.vx) + Math.abs(c.vy) > 0.05 || Math.abs(c.alpha - target) > 0.01) moving = true;
       });

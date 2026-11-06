@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { EMAIL } from "@/data/contenido";
 
 /** Botón «Copiar email»: copia al portapapeles y avisa con «Copiado» (aria-live). */
-export default function CopyEmail({ email, className = "" }: { email: string; className?: string }) {
+export default function CopyEmail({ email = EMAIL, className = "" }: { email?: string; className?: string }) {
   const [ok, setOk] = useState(false);
   const copy = async () => {
     try {
