@@ -51,6 +51,25 @@ export default function Proyectos() {
                   </li>
                 ))}
               </ul>
+              {p.caso && (
+                <details className="mt-4 group/caso">
+                  <summary className="cursor-pointer select-none text-sm font-medium text-indigo-600 dark:text-indigo-300 hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-300">
+                    Caso de estudio
+                  </summary>
+                  <dl className="mt-3 space-y-2.5 text-[14px] leading-6">
+                    {(
+                      [["Problema", p.caso.problema], ["Qué hice", p.caso.hice], ["Reto técnico", p.caso.reto], ["Resultado", p.caso.resultado]] as const
+                    ).map(([k, v]) =>
+                      v ? (
+                        <div key={k}>
+                          <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-neutral-600 dark:text-neutral-400">{k}</dt>
+                          <dd className="text-neutral-700 dark:text-neutral-300">{v}</dd>
+                        </div>
+                      ) : null,
+                    )}
+                  </dl>
+                </details>
+              )}
               {p.href && (
                 <a
                   href={p.href}

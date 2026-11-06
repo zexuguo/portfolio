@@ -74,6 +74,7 @@ export const SECTIONS: Section[] = [
     cta: [
       { label: "Contactar", href: "mailto:zexuguo34@gmail.com" },
       { label: "LinkedIn", href: "https://www.linkedin.com/in/zexu-guo-b4517740a/" },
+      { label: "GitHub", href: "https://github.com/zexuguo" },
       { label: "Descargar CV", href: "/cv-zexu-guo.pdf" },
     ],
   },

@@ -5,6 +5,12 @@ import SwarmCursors from "@/components/SwarmCursors";
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 bg-neutral-50 dark:bg-neutral-950">
+      <a
+        href="#contenido"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-neutral-900 focus:px-4 focus:py-2 focus:text-sm focus:text-white"
+      >
+        Saltar al contenido
+      </a>
       <SwarmCursors />
       <header className="fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-6 md:px-10 py-4 backdrop-blur-md bg-neutral-50/70 dark:bg-neutral-950/70 border-b border-neutral-200/60 dark:border-neutral-800/60">
         <a
@@ -35,18 +41,17 @@ export default function Home() {
         </nav>
       </header>
 
-      <main className="flex-1">
+      <main id="contenido" className="flex-1">
         <ScrollStory />
         <Proyectos />
 
         <footer className="py-12 px-6 flex flex-col sm:flex-row items-center justify-between gap-3 max-w-6xl mx-auto w-full border-t border-neutral-200 dark:border-neutral-800">
           <p className="font-mono text-xs text-neutral-500">© {new Date().getFullYear()} Zexu Guo</p>
-          <a
-            href="mailto:zexuguo34@gmail.com"
-            className="font-mono text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
-          >
-            zexuguo34@gmail.com
-          </a>
+          <div className="flex items-center gap-5 font-mono text-xs text-neutral-600 dark:text-neutral-400">
+            <a href="https://github.com/zexuguo" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">GitHub</a>
+            <a href="https://www.linkedin.com/in/zexu-guo-b4517740a/" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">LinkedIn</a>
+            <a href="mailto:zexuguo34@gmail.com" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">zexuguo34@gmail.com</a>
+          </div>
         </footer>
       </main>
     </div>
