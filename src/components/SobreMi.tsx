@@ -27,7 +27,7 @@ export default function SobreMi() {
               {SOBRE_MI.intereses.map((i) => (
                 <li key={i.titulo}>
                   <p className="font-medium text-neutral-900 dark:text-neutral-50">{i.titulo}</p>
-                  <p className="text-[15px] text-neutral-600 dark:text-neutral-300">{i.texto}</p>
+                  <p className="text-base text-neutral-600 dark:text-neutral-300">{i.texto}</p>
                 </li>
               ))}
             </ul>
@@ -36,7 +36,7 @@ export default function SobreMi() {
         <Build className="h-full">
           <div className="h-full rounded-2xl border border-neutral-200 bg-neutral-100 p-5 dark:border-neutral-800 dark:bg-neutral-900">
             <h3 className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400">Ahora estoy…</h3>
-            <ul className="list-disc space-y-2 pl-5 text-[15px] leading-6 text-neutral-700 marker:text-indigo-600 dark:text-neutral-300 dark:marker:text-indigo-300">
+            <ul className="list-disc space-y-2 pl-5 text-base leading-6 text-neutral-700 marker:text-indigo-600 dark:text-neutral-300 dark:marker:text-indigo-300">
               {SOBRE_MI.ahora.map((a) => (
                 <li key={a}>{a}</li>
               ))}

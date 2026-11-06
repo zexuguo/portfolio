@@ -4,7 +4,7 @@ import { CV_URL, EMAIL, GITHUB, LINKEDIN } from "@/data/contenido";
 
 const focus =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-300";
-const btn = `rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900 ${focus}`;
+const btn = `rounded-full border border-neutral-300 px-5 py-3 min-h-11 inline-flex items-center justify-center text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900 ${focus}`;
 
 export default function Contacto() {
   return (
@@ -19,7 +19,7 @@ export default function Contacto() {
             Busco prácticas o un primer puesto junior en remoto (web, backend o sistemas). Si tienes un proyecto donde pueda aprender rápido y aportar desde el primer día, escríbeme.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href={`mailto:${EMAIL}`} className={`rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 dark:bg-neutral-50 dark:text-neutral-900 ${focus}`}>
+            <a href={`mailto:${EMAIL}`} className={`rounded-full bg-neutral-900 px-5 py-3 min-h-11 inline-flex items-center justify-center text-sm font-medium text-white transition-opacity hover:opacity-90 dark:bg-neutral-50 dark:text-neutral-900 ${focus}`}>
               {EMAIL}
             </a>
             <CopyEmail className={`cursor-pointer ${btn}`} />

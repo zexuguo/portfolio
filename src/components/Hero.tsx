@@ -26,14 +26,14 @@ export default function Hero() {
               Disponible · prácticas / junior remoto
             </p>
             <div className="flex flex-wrap gap-3">
-              <a href="#proyectos" className={`rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 dark:bg-neutral-50 dark:text-neutral-900 ${focus}`}>
+              <a href="#proyectos" className={`rounded-full bg-neutral-900 px-5 py-3 min-h-11 inline-flex items-center justify-center text-sm font-medium text-white transition-opacity hover:opacity-90 dark:bg-neutral-50 dark:text-neutral-900 ${focus}`}>
                 Ver proyectos
               </a>
               <CopyEmail
-                className={`cursor-pointer rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900 ${focus}`}
+                className={`cursor-pointer rounded-full border border-neutral-300 px-5 py-3 min-h-11 inline-flex items-center justify-center text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900 ${focus}`}
               />
               {CV_URL && (
-                <a href={CV_URL} className={`rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900 ${focus}`}>
+                <a href={CV_URL} className={`rounded-full border border-neutral-300 px-5 py-3 min-h-11 inline-flex items-center justify-center text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900 ${focus}`}>
                   Descargar CV
                 </a>
               )}

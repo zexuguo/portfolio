@@ -34,7 +34,7 @@ export default function SectionContent({
                 <a
                   key={c.label}
                   href={c.href}
-                  className={`rounded-full px-5 py-2.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-300 ${
+                  className={`rounded-full px-5 py-3 min-h-11 inline-flex items-center justify-center text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-300 ${
                     i === 0
                       ? "bg-neutral-900 text-white hover:opacity-90 dark:bg-neutral-50 dark:text-neutral-900"
                       : "border border-neutral-300 text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"

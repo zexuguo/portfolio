@@ -41,14 +41,14 @@ export default function Tecnico() {
                 <div className="h-full rounded-2xl border border-neutral-200 bg-neutral-100 p-5 dark:border-neutral-800 dark:bg-neutral-900">
                   <h4 className="font-semibold leading-snug text-neutral-900 dark:text-neutral-50">{f.titulo}</h4>
                   <p className="mt-1 font-mono text-xs text-neutral-600 dark:text-neutral-400">{f.lugar}</p>
-                  <p className="mt-3 text-[15px] leading-6 text-neutral-600 dark:text-neutral-300">{f.texto}</p>
+                  <p className="mt-3 text-base leading-6 text-neutral-600 dark:text-neutral-300">{f.texto}</p>
                 </div>
               </Build>
             </li>
           ))}
         </ul>
         <Build className="mt-6">
-          <p className="text-[15px] text-neutral-600 dark:text-neutral-300">{TECNICO.hackathons}</p>
+          <p className="text-base text-neutral-600 dark:text-neutral-300">{TECNICO.hackathons}</p>
         </Build>
       </div>
     </section>

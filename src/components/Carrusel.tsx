@@ -69,7 +69,7 @@ export default function Carrusel() {
   }, [rotando, activo, ir]);
 
   const manual = (i: number) => { setUsuarioPausa(true); ir(i); };
-  const btn = `flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 text-neutral-800 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900 ${focus}`;
+  const btn = `flex h-11 w-11 items-center justify-center rounded-full border border-neutral-300 text-neutral-800 transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900 ${focus}`;
 
   return (
     <div
@@ -114,7 +114,7 @@ export default function Carrusel() {
                     ))}
                   </ul>
                   {p.href && (
-                    <a href={p.href} target="_blank" rel="noopener noreferrer" className={`w-fit text-sm font-medium text-indigo-600 underline-offset-4 hover:underline dark:text-indigo-300 ${focus}`}>
+                    <a href={p.href} target="_blank" rel="noopener noreferrer" className={`inline-flex min-h-11 w-fit items-center text-sm font-medium text-indigo-600 underline-offset-4 hover:underline dark:text-indigo-300 ${focus}`}>
                       Ver proyecto ↗
                     </a>
                   )}
@@ -122,8 +122,8 @@ export default function Carrusel() {
               </div>
               <div className="flex flex-col p-5 md:p-6">
                 <h3 className="text-xl font-semibold leading-7 text-neutral-900 dark:text-neutral-50">{p.nombre}</h3>
-                <p className="mt-1.5 text-[15px] leading-6 text-neutral-700 dark:text-neutral-300">{p.resumen}</p>
-                <dl className="mt-4 space-y-2.5 text-[14px] leading-6">
+                <p className="mt-1.5 text-base leading-6 text-neutral-700 dark:text-neutral-300">{p.resumen}</p>
+                <dl className="mt-4 space-y-2.5 text-base leading-6">
                   {([["Problema", p.caso.problema], ["Qué hice", p.caso.hice], ["Reto técnico", p.caso.reto], ["Resultado", p.caso.resultado]] as const).map(([k, v]) =>
                     v ? (
                       <div key={k}>
@@ -140,14 +140,14 @@ export default function Carrusel() {
       </ul>
 
       <p className="sr-only" aria-live={rotando ? "off" : "polite"}>{`Proyecto ${activo + 1} de ${n}: ${PROYECTOS[activo].nombre}`}</p>
-      <div className="mt-4 flex items-center justify-between gap-4">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <div className="flex items-center gap-2">
           <button type="button" className={btn} aria-label="Proyecto anterior" onClick={() => manual(activo - 1)}>←</button>
           <button type="button" className={btn} aria-label="Proyecto siguiente" onClick={() => manual(activo + 1)}>→</button>
           {!reduced && (
             <button
               type="button"
-              className={`ml-1 rounded-full px-3 py-2 font-mono text-xs text-neutral-700 hover:underline dark:text-neutral-300 ${focus}`}
+              className={`ml-1 min-h-11 rounded-full px-3 py-2 font-mono text-xs text-neutral-700 hover:underline dark:text-neutral-300 ${focus}`}
               aria-pressed={usuarioPausa}
               onClick={() => setUsuarioPausa((v) => !v)}
             >
@@ -163,7 +163,7 @@ export default function Carrusel() {
               aria-label={`Ir al proyecto ${i + 1}: ${p.nombre}`}
               aria-current={i === activo ? "true" : undefined}
               onClick={() => manual(i)}
-              className={`flex h-6 w-6 items-center justify-center rounded-full ${focus}`}
+              className={`flex h-11 w-11 items-center justify-center rounded-full ${focus}`}
             >
               <span className={`block h-2 rounded-full transition-all ${i === activo ? "w-5 bg-indigo-600 dark:bg-indigo-300" : "w-2 bg-neutral-400 dark:bg-neutral-600"}`} />
             </button>

@@ -20,7 +20,7 @@ export default function Proyectos() {
         </Build>
         <Build className="mt-10">
           <h3 className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400">También</h3>
-          <ul className="space-y-2 text-[15px] leading-6 text-neutral-700 dark:text-neutral-300">
+          <ul className="space-y-2 text-base leading-6 text-neutral-700 dark:text-neutral-300">
             {TAMBIEN.map((t) => (
               <li key={t} className="border-l-2 border-neutral-300 pl-3 dark:border-neutral-700">{t}</li>
             ))}
