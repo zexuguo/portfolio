@@ -32,8 +32,11 @@ body {
   100% { opacity: 0; transform: translate(-50%, 10px); }
 }
 
-/* Bloques que construyen los cursores: ocultos hasta que Build los muestra (no con reduced-motion) */
+/* Bloques que construyen los cursores: invisibles (con esqueleto) hasta que un cursor los descubre.
+   Con prefers-reduced-motion no se aplica nada: todo se ve desde el principio. */
+.build-skel { display: none; }
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
-  .build-init { opacity: .25; }
+  .build[data-estado="pendiente"] > .build-content { opacity: 0; }
+  .build[data-estado="pendiente"] > .build-skel { display: block; }
 }

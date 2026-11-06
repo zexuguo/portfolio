@@ -31,7 +31,9 @@ export default function Tecnico() {
           </dl>
         </Build>
 
-        <h3 className="mb-4 mt-12 font-mono text-xs uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400">Formación</h3>
+        <Build kind="text" className="mb-4 mt-12">
+          <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400">Formación</h3>
+        </Build>
         <ul className="grid gap-4 md:grid-cols-3">
           {TECNICO.formacion.map((f) => (
             <li key={f.titulo}>

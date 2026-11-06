@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { swarmBridge } from "@/lib/swarm";
 
 /**
  * Paradas de scroll «de cercanía» (código propio, sin dependencias nuevas).
@@ -43,6 +44,7 @@ export default function ParadasScroll() {
       timer = null;
       const now = performance.now();
       if (tocando || now - ultimaTecla < 1200 || now - ultimoFoco < 600) return;
+      if (swarmBridge.ocupados() > 0) { timer = setTimeout(evaluar, ESPERA); return; } // no mover la página mientras un cursor construye
       const y = window.scrollY;
       const { ys, max } = puntos();
       if (y <= 2 || y >= max - 2) return; // extremos de la página: nunca tirar de vuelta

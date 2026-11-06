@@ -1,92 +1,88 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { pedirConstruccion } from "@/lib/swarm";
+import { swarmBridge, type Bloque } from "@/lib/swarm";
 
 /**
- * Bloque que construyen los cursores del enjambre (los mismos que orbitan).
- * El contenido está siempre presente con poca opacidad (.25) y sube a 1 mientras
- * 2–3 cursores lo «dibujan» (≈1 s). Si el scroll es rápido o no hay cursores
- * libres, salta al estado final. Con prefers-reduced-motion no se anima nada.
- * Código propio; idea inspirada en Swarm de Joel Califa (sin copiar código).
+ * Bloque que construyen los cursores (código propio; idea inspirada en Swarm de Joel Califa,
+ * sin copiar código de nadie).
+ *
+ * Reglas: un bloque no construido es INVISIBLE pero reserva su hueco (sin saltos) y enseña solo
+ * un esqueleto fino con su medida. Se descubre únicamente dentro del recuadro que arrastra un
+ * cursor. Si la construcción se cancela (sale de pantalla, scroll rápido, redimensionar) vuelve
+ * a ser invisible y se construye cuando se pueda. Con prefers-reduced-motion todo se ve sin cursores.
  */
 interface Props {
   children: ReactNode;
   kind?: "rect" | "text";
-  /** segundos de espera antes de empezar */
-  delay?: number;
-  /** modo controlado: construye cuando pasa a true y se reinicia al pasar a false */
+  /** modo controlado: solo se construye mientras sea true (y se reinicia al pasar a false) */
   play?: boolean;
-  start?: string;
   className?: string;
 }
 
 const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-export default function Build({ children, kind = "rect", delay = 0, play, start = "top 96%", className = "" }: Props) {
+export default function Build({ children, kind = "rect", play, className = "" }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
-  const done = useRef(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const medida = useRef<HTMLSpanElement>(null);
+  const playRef = useRef(play);
+  const bloque = useRef<Bloque | null>(null);
 
-  const setP = (p: number) => {
-    const c = content.current;
-    if (!c || done.current) return;
-    c.style.opacity = String(0.25 + 0.75 * p);
-    c.style.transform = p < 1 ? `translateY(${(1 - p) * 5}px)` : "";
-  };
-  const reveal = () => {
-    const c = content.current;
-    if (timer.current) clearTimeout(timer.current);
-    done.current = true;
-    if (!c) return;
-    c.classList.remove("build-init");
-    c.style.opacity = "";
-    c.style.transform = "";
-  };
-  const reset = () => {
-    if (timer.current) clearTimeout(timer.current);
-    done.current = false;
-    const c = content.current;
-    if (!c) return;
-    c.classList.add("build-init");
-    c.style.opacity = "";
-    c.style.transform = "";
-  };
-  const run = (instant = false) => {
-    if (done.current) return;
-    if (instant) return reveal();
-    // red de seguridad: si algo falla, el contenido se muestra igualmente
-    timer.current = setTimeout(reveal, 2800 + delay * 1000);
-    pedirConstruccion({ el: root.current!, kind, delay, onProgress: setP, onDone: reveal });
+  const setEstado = (e: Bloque["estado"]) => {
+    if (bloque.current) bloque.current.estado = e;
+    if (root.current) root.current.dataset.estado = e;
   };
 
   useLayoutEffect(() => {
-    if (reduced()) { content.current?.classList.remove("build-init"); return; }
-    gsap.registerPlugin(ScrollTrigger);
-    reset();
-    if (play !== undefined) return;
-    const st = ScrollTrigger.create({
-      trigger: root.current,
-      start,
-      once: true,
-      onEnter: (self) => run(Math.abs(self.getVelocity()) > 2200), // scroll rápido: estado final
+    const el = root.current, c = content.current;
+    if (!el || !c) return;
+    if (reduced()) { el.dataset.estado = "listo"; return; } // todo visible, sin cursores
+    const b: Bloque = {
+      el, kind, estado: "pendiente",
+      activo: () => playRef.current !== false,
+      progreso: (p) => {
+        if (b.estado !== "construyendo") setEstado("construyendo");
+        const r = `${(1 - p) * 100}%`;
+        // el contenido solo se ve dentro del recuadro que el cursor va dibujando
+        c.style.clipPath = kind === "text" ? `inset(-4px ${r} -4px 0)` : `inset(0 ${r} ${r} 0 round 12px)`;
+      },
+      listo: () => { c.style.clipPath = ""; setEstado("listo"); el.dataset.construido = "cursor"; },
+      cancelar: () => { c.style.clipPath = ""; setEstado("pendiente"); },
+    };
+    bloque.current = b;
+    el.dataset.estado = "pendiente";
+    swarmBridge.blocks.add(b);
+    swarmBridge.despertar();
+
+    // esqueleto: muestra la medida real del hueco
+    const ro = new ResizeObserver(() => {
+      if (medida.current) medida.current.textContent = `${Math.round(el.offsetWidth)} × ${Math.round(el.offsetHeight)}`;
     });
-    return () => { st.kill(); if (timer.current) clearTimeout(timer.current); };
+    ro.observe(el);
+
+    // red de seguridad: si los cursores no llegan a montarse nunca, no dejar la página vacía
+    const t = setTimeout(() => { if (!swarmBridge.listo && b.estado === "pendiente") b.listo(); }, 3000);
+    return () => { clearTimeout(t); ro.disconnect(); swarmBridge.blocks.delete(b); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // modo controlado (temas de la figura): al desactivarse vuelve a pendiente y cancela lo que haya
   useEffect(() => {
-    if (play === undefined || reduced()) return;
-    if (play) { reset(); run(); } else reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    playRef.current = play;
+    const b = bloque.current;
+    if (!b || play === undefined) return;
+    if (!play && b.estado !== "pendiente") b.cancelar();
+    if (!play) b.estado = "pendiente";
+    swarmBridge.despertar();
   }, [play]);
 
   return (
-    <div ref={root} className={className}>
-      <div ref={content} className="build-init h-full">{children}</div>
+    <div ref={root} className={`build relative ${className}`} data-estado="pendiente">
+      <div ref={content} className="build-content h-full">{children}</div>
+      <div aria-hidden="true" className="build-skel pointer-events-none absolute inset-0 rounded-xl border border-dashed border-neutral-400/40 dark:border-neutral-500/40">
+        <span ref={medida} className="absolute bottom-1 right-2 font-mono text-[10px] text-neutral-500 dark:text-neutral-400" />
+      </div>
     </div>
   );
 }

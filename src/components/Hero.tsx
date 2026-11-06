@@ -45,7 +45,7 @@ export default function Hero() {
             </ul>
           </Build>
         </div>
-        <div className="order-first mx-auto w-44 md:order-none md:w-full">
+        <Build className="order-first mx-auto w-44 md:order-none md:w-full">
           <Image
             src="/figura/avatar.webp"
             alt="Retrato de Zexu Guo, ilustración 3D de estilo low-poly"
@@ -55,7 +55,7 @@ export default function Hero() {
             unoptimized
             className="aspect-square w-full rounded-full border border-neutral-200 bg-white object-cover dark:border-neutral-700"
           />
-        </div>
+        </Build>
       </div>
     </section>
   );

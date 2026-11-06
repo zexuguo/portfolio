@@ -1,25 +1,29 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { CURSORES, swarmBridge, type BuildRequest } from "@/lib/swarm";
+import { CURSORES, swarmBridge, type Bloque } from "@/lib/swarm";
 
 /**
  * Cursores constructores (código propio; idea inspirada en «Swarm» de Joel Califa,
  * https://califa.github.io/swarm-site/, sin copiar código suyo ni de ningún derivado).
  *
- * No hay enjambre permanente: solo aparecen cuando un bloque se construye. Entran por
- * el borde, dibujan el recuadro con su medida (o «escriben» el texto), hacen clic y se
- * van. Máximo 2 a la vez; si hay cola larga, el bloque se muestra directamente.
- * Capa fija, sin eventos, aria-hidden. Con prefers-reduced-motion no hace nada.
+ * Reglas de sincronía:
+ *  - Solo hay cursores mientras construyen; máximo 2 a la vez; cola = bloques pendientes visibles, de arriba abajo.
+ *  - Un bloque solo se muestra dentro del recuadro que arrastra su cursor (nunca aparece solo).
+ *  - La posición se recalcula en cada fotograma con getBoundingClientRect: el cursor sigue al elemento real.
+ *  - Se CANCELA (cursor y recuadro desaparecen; el bloque vuelve a invisible) si el bloque sale de pantalla,
+ *    se redimensiona la ventana, cambia el tema claro/oscuro o el scroll es rápido. Se reintenta al calmarse.
+ *  - Con prefers-reduced-motion no se monta nada (Build lo muestra todo).
  */
 const SIZE = 24;
-const FLY = 320, EXIT = 280, CLICK = 110, MAX = 2, MAX_ESPERA = 900;
+const FLY = 220, CLICK = 90, EXIT = 200, MAX = 2;
+const VEL_MAX = 2500, VEL_CALMA = 1100; // px/s
 const clamp = (v: number, a: number, b: number) => Math.min(Math.max(v, a), b);
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 interface Task {
-  req: BuildRequest; t0: number; started: boolean; startAt: number;
-  slot: number; fx: number; fy: number; x: number; y: number; alpha: number; scale: number; revealed: boolean;
+  b: Bloque; startAt: number; slot: number; fx: number; fy: number;
+  x: number; y: number; alpha: number; scale: number; done: boolean; side: number; doneAt: number; ex: number;
 }
 
 function arrow(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, alpha: number, scale: number) {
@@ -54,12 +58,13 @@ export default function SwarmCursors() {
 
   useEffect(() => {
     const canvas = ref.current;
-    const ctx = canvas?.getContext("2d");
-    if (!canvas || !ctx) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return; // Build muestra todo sin animar
+    const g = canvas?.getContext("2d");
+    if (!canvas || !g) return;
+    const ctx: CanvasRenderingContext2D = g;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let vw = 0, vh = 0, raf = 0, running = false, counter = 0;
-    const queue: Task[] = [];
+    let lastY = window.scrollY, lastT = performance.now(), vel = 0, lastEvento = 0, bloqueoHasta = 0;
     const active: Task[] = [];
 
     const resize = () => {
@@ -69,96 +74,128 @@ export default function SwarmCursors() {
     };
     resize();
 
-    const reveal = (t: Task) => { if (!t.revealed) { t.revealed = true; t.req.onProgress(1); t.req.onDone(); } };
-    const pos = (x: number, y: number) => [clamp(x, 10, vw - 28), clamp(y, 60, vh - 24)] as const;
-
-    const request = (req: BuildRequest) => {
-      queue.push({ req, t0: performance.now() + req.delay * 1000, started: false, startAt: 0, slot: 0, fx: 0, fy: 0, x: 0, y: 0, alpha: 0, scale: 1, revealed: false });
-      go();
+    const visible = (b: Bloque) => {
+      const r = b.el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0 && r.bottom > 64 && r.top < vh - 24;
     };
-    swarmBridge.request = request;
-    swarmBridge.waiting.splice(0).forEach(request);
+    const cancelarTodo = (hasta = 0) => {
+      for (let i = active.length - 1; i >= 0; i--) if (!active[i].done) { active[i].b.cancelar(); active.splice(i, 1); }
+      if (hasta) bloqueoHasta = Math.max(bloqueoHasta, performance.now() + hasta);
+    };
+    const pos = (x: number, y: number) => [clamp(x, 10, vw - 28), clamp(y, 64, vh - 24)] as const;
 
-    const begin = (t: Task, now: number) => {
-      const r = t.req.el.getBoundingClientRect();
-      if (!r.width || !r.height || r.bottom < 0 || r.top > vh) { reveal(t); return false; }
+    const begin = (b: Bloque, now: number) => {
+      const r = b.el.getBoundingClientRect();
       const left = counter++ % 2 === 0;
-      t.fx = left ? -30 : vw + 30; t.fy = clamp(r.top + r.height / 2, 60, vh - 24);
-      t.x = t.fx; t.y = t.fy; t.startAt = now; t.started = true;
-      t.slot = CURSORES.length ? (counter + Math.floor(Math.random() * CURSORES.length)) % CURSORES.length : 0;
-      return true;
+      const t: Task = {
+        b, startAt: now, slot: (counter * 3) % CURSORES.length, side: left ? -30 : vw + 30,
+        fx: left ? -30 : vw + 30, fy: clamp(r.top + r.height / 2, 64, vh - 24),
+        x: 0, y: 0, alpha: 0, scale: 1, done: false, doneAt: 0, ex: 0,
+      };
+      t.x = t.fx; t.y = t.fy;
+      b.estado = "construyendo";
+      b.progreso(0);
+      active.push(t);
     };
 
-    // devuelve true cuando el cursor ya se ha ido
+    const dur = (b: Bloque, w: number) => (b.kind === "text" ? clamp(200 + w * 0.3, 250, 500) : 380);
+
+    // true cuando el cursor ya ha salido
     const step = (t: Task, now: number) => {
-      const r = t.req.el.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > vh) { reveal(t); return true; } // scroll rápido: se fue de pantalla
-      const el = now - t.startAt, text = t.req.kind === "text";
-      const dur = text ? clamp(300 + r.width * 0.4, 350, 650) : 520;
-      const click = text ? 0 : CLICK;
-      const tDrag = FLY + dur, tClick = tDrag + click, tEnd = tClick + EXIT;
-      const k = clamp((el - FLY) / dur, 0, 1), e = ease(k);
-      let tx: number, ty: number;
-      if (text) { tx = r.left + (el < FLY ? 0 : r.width * e); ty = r.top + r.height * 0.72; }
-      else { tx = r.left + (el < FLY ? 0 : r.width * e); ty = r.top + (el < FLY ? 0 : r.height * e); }
-      const [px, py] = pos(tx, ty);
-      if (el < FLY) { const f = ease(el / FLY); t.x = t.fx + (px - t.fx) * f; t.y = t.fy + (py - t.fy) * f; t.alpha = Math.min(1, el / 120); }
-      else if (el <= tClick) { t.x = px; t.y = py; t.alpha = 1; }
-      else { // salida hacia el borde más cercano
-        const f = ease((el - tClick) / EXIT), side = t.fx < 0 ? -40 : vw + 40;
-        t.x = px + (side - px) * f; t.y = py; t.alpha = 1 - f;
+      const el = now - t.startAt;
+      if (!t.done) {
+        const r = t.b.el.getBoundingClientRect();
+        if (!t.b.activo() || r.width <= 0 || r.bottom < 56 || r.top > vh) { t.b.cancelar(); return "cancelada" as const; } // salió de pantalla o ya no toca
+        const text = t.b.kind === "text", d = dur(t.b, r.width), click = text ? 0 : CLICK;
+        const tDrag = FLY + d, tClick = tDrag + click;
+        const e = ease(clamp((el - FLY) / d, 0, 1));
+        const tx = r.left + (el < FLY ? 0 : r.width * e);
+        const ty = text ? r.top + r.height * 0.72 : r.top + (el < FLY ? 0 : r.height * e);
+        const [px, py] = pos(tx, ty);
+        if (el < FLY) { const f = ease(el / FLY); t.x = t.fx + (px - t.fx) * f; t.y = t.fy + (py - t.fy) * f; t.alpha = Math.min(1, el / 100); }
+        else { t.x = px; t.y = py; t.alpha = 1; }
+        t.scale = !text && el > tDrag ? 0.8 + 0.2 * Math.abs((el - tDrag) / click - 0.5) * 2 : 1;
+        if (el >= FLY) t.b.progreso(e);
+        if (el >= tClick) { t.b.listo(); t.done = true; t.doneAt = now; t.ex = t.x; } // el elemento ya está construido
+        return "sigue" as const;
       }
-      t.scale = !text && el > tDrag && el < tClick ? 0.8 + 0.2 * Math.abs((el - tDrag) / click - 0.5) * 2 : 1;
-      t.req.onProgress(el < FLY ? 0 : e);
-      if (el >= tClick) reveal(t);
-      return el >= tEnd;
+      // salida: el cursor se aleja por su borde; el bloque ya es visible y no depende de nada
+      const f = ease(clamp((now - t.doneAt) / EXIT, 0, 1));
+      t.alpha = 1 - f; t.x = t.ex + (t.side - t.ex) * f * 0.5;
+      return f >= 1 ? ("fuera" as const) : ("sigue" as const);
     };
 
-    const draw = (now: number) => {
+    const draw = () => {
       ctx.clearRect(0, 0, vw, vh);
-      active.forEach((t) => {
-        const c = CURSORES[t.slot], el = now - t.startAt;
-        const r = t.req.el.getBoundingClientRect();
-        if (t.req.kind !== "text" && el >= FLY) {
-          const dur = 520, e = ease(clamp((el - FLY) / dur, 0, 1));
-          const fade = el > FLY + dur ? 1 - clamp((el - FLY - dur) / CLICK, 0, 1) : 1;
-          const w = r.width * e, h = r.height * e;
-          ctx.save();
-          ctx.globalAlpha = fade;
-          ctx.beginPath(); ctx.roundRect(r.left, r.top, w, h, 12);
-          ctx.fillStyle = c.color + "26"; ctx.fill();
-          ctx.lineWidth = 2; ctx.strokeStyle = c.color; ctx.stroke();
-          ctx.restore();
-          pill(ctx, `${Math.round(w)} × ${Math.round(h)}`, r.left + w - 60, clamp(r.top + h + 6, 60, vh - 20), c.color, fade, vw, true);
+      for (const t of active) {
+        const c = CURSORES[t.slot];
+        if (!t.done && t.b.kind !== "text") {
+          const r = t.b.el.getBoundingClientRect();
+          const e = ease(clamp((performance.now() - t.startAt - FLY) / dur(t.b, r.width), 0, 1));
+          if (performance.now() - t.startAt >= FLY) {
+            const w = r.width * e, h = r.height * e;
+            ctx.save();
+            ctx.beginPath(); ctx.roundRect(r.left, r.top, w, h, 12);
+            ctx.strokeStyle = c.color; ctx.lineWidth = 2; ctx.stroke();
+            ctx.restore();
+            pill(ctx, `${Math.round(w)} × ${Math.round(h)}`, r.left + w - 60, clamp(r.top + h + 6, 64, vh - 20), c.color, 1, vw, true);
+          }
         }
         arrow(ctx, t.x, t.y, c.color, t.alpha, t.scale);
         ctx.font = "500 11px system-ui, sans-serif";
         const w = ctx.measureText(c.name).width + 10;
         pill(ctx, c.name, t.x + 18 + w + 4 > vw ? t.x - w - 4 : t.x + 18, t.y + 20, c.color, t.alpha, vw);
-      });
+      }
     };
 
     function frame(now: number) {
-      for (let i = 0; i < queue.length; ) {
-        const t = queue[i];
-        if (now < t.t0) { i++; continue; }
-        if (active.length < MAX) { queue.splice(i, 1); if (begin(t, now)) active.push(t); continue; }
-        if (now - t.t0 > MAX_ESPERA) { queue.splice(i, 1); reveal(t); continue; } // cola larga: sin animar
-        i++;
+      const dt = Math.max(now - lastT, 1);
+      const inst = (Math.abs(window.scrollY - lastY) / dt) * 1000;
+      vel = vel * 0.5 + inst * 0.5; lastY = window.scrollY; lastT = now;
+      if (inst > 0) lastEvento = now;
+
+      if (vel > VEL_MAX) cancelarTodo(); // scroll rápido: los bloques se quedan invisibles
+      for (let i = active.length - 1; i >= 0; i--) {
+        const r = step(active[i], now);
+        if (r !== "sigue") active.splice(i, 1);
       }
-      for (let i = active.length - 1; i >= 0; i--) if (step(active[i], now)) active.splice(i, 1);
-      draw(now);
-      if (!queue.length && !active.length) { running = false; ctx!.clearRect(0, 0, vw, vh); return; }
+      // arrancar bloques pendientes y visibles, de arriba abajo, solo con el scroll calmado
+      let pendientes = 0;
+      if (vel < VEL_CALMA && now >= bloqueoHasta) {
+        const cand = [...swarmBridge.blocks]
+          .filter((b) => b.estado === "pendiente" && b.activo() && visible(b))
+          .sort((a, b) => a.el.getBoundingClientRect().top - b.el.getBoundingClientRect().top);
+        pendientes = cand.length;
+        while (active.length < MAX && cand.length) begin(cand.shift()!, now);
+      } else pendientes = 1; // en espera de calma
+      draw();
+      const sigue = active.length > 0 || pendientes > 0 || now - lastEvento < 300 || now < bloqueoHasta;
+      if (!sigue) { running = false; ctx.clearRect(0, 0, vw, vh); return; }
       raf = requestAnimationFrame(frame);
     }
-    function go() { if (!running) { running = true; raf = requestAnimationFrame(frame); } }
+    const despertar = () => { if (!running) { running = true; lastT = performance.now(); raf = requestAnimationFrame(frame); } };
 
-    window.addEventListener("resize", resize);
+    const onResize = () => { resize(); cancelarTodo(250); despertar(); };
+    const dark = window.matchMedia("(prefers-color-scheme: dark)");
+    const onTema = () => { cancelarTodo(250); despertar(); };
+
+    swarmBridge.despertar = despertar;
+    swarmBridge.ocupados = () => active.length;
+    swarmBridge.listo = true;
+    (window as unknown as { __cursores: () => { activos: number } }).__cursores = () => ({ activos: active.length });
+    window.addEventListener("resize", onResize);
+    window.addEventListener("scroll", despertar, { passive: true });
+    dark.addEventListener("change", onTema);
+    document.addEventListener("visibilitychange", despertar);
+    despertar();
     return () => {
       cancelAnimationFrame(raf);
-      swarmBridge.request = null;
-      queue.concat(active).forEach(reveal); // nunca dejar contenido a medias
-      window.removeEventListener("resize", resize);
+      cancelarTodo();
+      swarmBridge.listo = false; swarmBridge.despertar = () => {}; swarmBridge.ocupados = () => 0;
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", despertar);
+      dark.removeEventListener("change", onTema);
+      document.removeEventListener("visibilitychange", despertar);
     };
   }, []);
 

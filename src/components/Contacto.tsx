@@ -28,7 +28,9 @@ export default function Contacto() {
             {CV_URL && <a href={CV_URL} className={btn}>Descargar CV</a>}
           </div>
         </Build>
-        <p className="mt-12 font-mono text-xs text-neutral-600 dark:text-neutral-400">© {new Date().getFullYear()} Zexu Guo</p>
+        <Build kind="text" className="mt-12">
+          <p className="font-mono text-xs text-neutral-600 dark:text-neutral-400">© {new Date().getFullYear()} Zexu Guo</p>
+        </Build>
       </div>
     </footer>
   );

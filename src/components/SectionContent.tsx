@@ -20,13 +20,13 @@ export default function SectionContent({
         <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400">{section.eyebrow}</p>
         <h3 className="mb-4 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50 md:text-4xl">{section.title}</h3>
       </Build>
-      <Build delay={0.2} play={play}>
+      <Build play={play}>
         <p className={`max-w-prose leading-relaxed text-neutral-600 dark:text-neutral-300 ${compact ? "text-base lg:text-[17px]" : "text-base md:text-lg"}`}>
           {section.body}
         </p>
       </Build>
       {section.cta && (
-        <Build delay={0.4} play={play} className="mt-6">
+        <Build play={play} className="mt-6">
           <div className="flex flex-wrap gap-3">
             {section.cta
               .filter((c): c is { label: string; href: string } => Boolean(c.href))
