@@ -5,7 +5,7 @@ import Build from "./Build";
 export default function Proyectos() {
   return (
     <section id="proyectos" className="px-6 py-24 max-w-[1080px] mx-auto w-full" data-no-swarm>
-      <Build kind="text" seed={2}>
+      <Build kind="text">
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400 mb-4">
           03 — Lo que construyo
         </p>
@@ -13,7 +13,7 @@ export default function Proyectos() {
           Proyectos
         </h2>
       </Build>
-      <Build seed={3} delay={0.4} className="mt-4 mb-10">
+      <Build delay={0.1} className="mt-4 mb-10">
         <p className="max-w-prose text-neutral-600 dark:text-neutral-300">
           Una muestra de lo que he construido. Las imágenes son esquemas y fotogramas propios: no
           enseño datos reales de clientes, claves ni saldos.
@@ -22,7 +22,7 @@ export default function Proyectos() {
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {PROYECTOS.map((p, i) => (
           <li key={p.nombre}>
-          <Build seed={i + 4} delay={(i % 2) * 0.25} className="h-full">
+          <Build delay={(i % 2) * 0.1} className="h-full">
           <div
             className="group h-full flex flex-col overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 transition-[border-color,transform] duration-150 motion-safe:hover:-translate-y-0.5 hover:border-indigo-600 dark:hover:border-indigo-300 focus-within:border-indigo-600 dark:focus-within:border-indigo-300"
           >

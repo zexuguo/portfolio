@@ -34,5 +34,5 @@ body {
 
 /* Bloques que construyen los cursores: ocultos hasta que Build los muestra (no con reduced-motion) */
 @media (prefers-reduced-motion: no-preference) {
-  .build-init { opacity: 0; }
+  .build-init { opacity: .15; }
 }

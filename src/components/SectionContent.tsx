@@ -14,12 +14,11 @@ export default function SectionContent({
   /** modo controlado (escritorio): construye cuando la sección está activa */
   play?: boolean;
 }) {
-  const seed = section.id;
   // "Lo que sé" lists skills, not projects: show them as a compact list
   const isSkillList = section.id === "cerebro";
   return (
     <div className={className}>
-      <Build kind="text" seed={seed} play={play}>
+      <Build kind="text" play={play}>
         <p className="font-mono text-xs uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400 mb-4">
           {section.eyebrow}
         </p>
@@ -27,7 +26,7 @@ export default function SectionContent({
           {section.title}
         </h2>
       </Build>
-      <Build seed={seed + "b"} delay={0.5} play={play}>
+      <Build delay={0.12} play={play}>
         <p
           className={`leading-relaxed text-neutral-600 dark:text-neutral-300 max-w-prose ${
             compact ? "text-base lg:text-[17px]" : "text-base md:text-lg"
@@ -39,7 +38,7 @@ export default function SectionContent({
 
       {section.projects && isSkillList ? (
         // short skill list: name + one line, no cards
-        <Build seed={seed + "c"} delay={1.0} play={play} className="mt-6">
+        <Build delay={0.2} play={play} className="mt-6">
         <dl className="grid grid-cols-2 gap-x-6 gap-y-3.5 border-t border-neutral-200 dark:border-neutral-800 pt-5">
           {section.projects.map((p) => (
             <div key={p.name}>
@@ -99,7 +98,7 @@ export default function SectionContent({
       )}
 
       {section.cta && (
-        <Build seed={seed + "d"} delay={1.0} play={play} className="mt-8">
+        <Build delay={0.2} play={play} className="mt-8">
         <div className="flex flex-wrap gap-3">
           {section.cta
             .filter((c): c is { label: string; href: string } => Boolean(c.href))
