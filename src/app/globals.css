@@ -39,4 +39,8 @@ body {
   html { scroll-behavior: smooth; }
   .build[data-estado="pendiente"] > .build-content { opacity: 0; }
   .build[data-estado="pendiente"] > .build-skel { display: block; }
+  #presentacion .build[data-estado="pendiente"] > .build-content { animation: build-seguro .01s 1.4s forwards; }
+}
+@keyframes build-seguro {
+  to { opacity: 1; }
 }
