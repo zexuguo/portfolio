@@ -80,8 +80,8 @@ export default function Build({ children, kind = "rect", play, className = "" }:
   return (
     <div ref={root} className={`build relative ${className}`} data-estado="pendiente">
       <div ref={content} className="build-content h-full">{children}</div>
-      <div aria-hidden="true" className="build-skel pointer-events-none absolute inset-0 rounded-xl border border-dashed border-neutral-400/40 dark:border-neutral-500/40">
-        <span ref={medida} className="absolute bottom-1 right-2 font-mono text-[10px] text-neutral-500 dark:text-neutral-400" />
+      <div aria-hidden="true" className="build-skel pointer-events-none absolute inset-0 rounded-xl bg-neutral-200/40 dark:bg-neutral-800/40">
+        <span ref={medida} className="absolute bottom-1 right-2 hidden font-mono text-xs text-neutral-600 md:block dark:text-neutral-400" />
       </div>
     </div>
   );

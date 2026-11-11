@@ -15,7 +15,7 @@ import { CURSORES, swarmBridge, type Bloque } from "@/lib/swarm";
  *    se redimensiona la ventana, cambia el tema claro/oscuro o el scroll es rápido. Se reintenta al calmarse.
  *  - Con prefers-reduced-motion no se monta nada (Build lo muestra todo).
  */
-const SIZE = 24;
+const SIZE = 20;
 const FLY = 160, CLICK = 90, EXIT = 200, MAX = 2;
 const VEL_MAX = 2500, VEL_CALMA = 1100; // px/s
 const clamp = (v: number, a: number, b: number) => Math.min(Math.max(v, a), b);
@@ -44,8 +44,8 @@ function arrow(ctx: CanvasRenderingContext2D, x: number, y: number, color: strin
 function pill(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, color: string, alpha: number, vw: number, mono = false) {
   ctx.save();
   ctx.globalAlpha = alpha;
-  ctx.font = mono ? "10px ui-monospace, monospace" : "500 11px system-ui, sans-serif";
-  const w = ctx.measureText(text).width + 10, h = 15;
+  ctx.font = mono ? "11px ui-monospace, monospace" : "500 12px system-ui, sans-serif";
+  const w = ctx.measureText(text).width + 10, h = 17;
   const px = clamp(x, 4, vw - w - 4);
   ctx.fillStyle = color;
   ctx.beginPath(); ctx.roundRect(px, y, w, h, 4); ctx.fill();
@@ -136,7 +136,7 @@ export default function SwarmCursors() {
             const w = r.width * e, h = r.height * e;
             ctx.save();
             ctx.beginPath(); ctx.roundRect(r.left, r.top, w, h, 12);
-            ctx.strokeStyle = c.color; ctx.lineWidth = 2; ctx.stroke();
+            ctx.strokeStyle = c.color; ctx.lineWidth = 1.5; ctx.stroke();
             ctx.restore();
             pill(ctx, `${Math.round(w)} × ${Math.round(h)}`, r.left + w - 60, clamp(r.top + h + 6, 64, vh - 20), c.color, 1, vw, true);
           }

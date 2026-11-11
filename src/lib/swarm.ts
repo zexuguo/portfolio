@@ -1,12 +1,9 @@
 /** Puente entre los bloques (Build) y los cursores constructores (SwarmCursors). Código propio. */
 export const CURSORES = [
-  { name: "Ana", color: "#FF6B6B" },
-  { name: "Biel", color: "#FFB020" },
   { name: "Carla", color: "#34C759" },
   { name: "Dani", color: "#2EC4B6" },
   { name: "Eva", color: "#4F8CFF" },
   { name: "Hugo", color: "#8B5CF6" },
-  { name: "Irene", color: "#FF5FA2" },
 ];
 
 /**

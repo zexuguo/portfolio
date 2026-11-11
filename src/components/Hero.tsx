@@ -14,7 +14,7 @@ export default function Hero() {
         <div>
           <p className="mb-5 font-mono text-xs uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400">{PRESENTACION.rol}</p>
           <h1 className="text-5xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50 lg:text-6xl">Zexu Guo</h1>
-          <p className="mb-4 inline-flex items-center gap-2 font-mono text-xs text-neutral-700 dark:text-neutral-300">
+          <p className="mt-4 inline-flex items-center gap-2 font-mono text-xs text-neutral-700 dark:text-neutral-300">
             <span aria-hidden="true" className="h-2 w-2 rounded-full bg-emerald-500" />
             Disponible · prácticas / junior remoto
           </p>
