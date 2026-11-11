@@ -9,7 +9,7 @@ const focus =
 /** Bloque 1: quién soy y qué hago, legible en 3 segundos. */
 export default function Hero() {
   return (
-    <section id="presentacion" className="scroll-mt-20 px-6 pt-28 pb-16 md:pt-32 md:pb-24">
+    <section id="presentacion" className="scroll-mt-20 px-6 pt-24 pb-16 md:pt-32 md:pb-24">
       <div className="mx-auto grid w-full max-w-[1080px] items-center gap-10 md:grid-cols-[1fr_320px] lg:grid-cols-[1fr_380px]">
         <div>
           <p className="mb-5 font-mono text-xs uppercase tracking-[0.2em] text-neutral-600 dark:text-neutral-400">{PRESENTACION.rol}</p>

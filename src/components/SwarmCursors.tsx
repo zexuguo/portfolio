@@ -16,7 +16,7 @@ import { CURSORES, swarmBridge, type Bloque } from "@/lib/swarm";
  *  - Con prefers-reduced-motion no se monta nada (Build lo muestra todo).
  */
 const SIZE = 24;
-const FLY = 220, CLICK = 90, EXIT = 200, MAX = 2;
+const FLY = 160, CLICK = 90, EXIT = 200, MAX = 2;
 const VEL_MAX = 2500, VEL_CALMA = 1100; // px/s
 const clamp = (v: number, a: number, b: number) => Math.min(Math.max(v, a), b);
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -98,7 +98,7 @@ export default function SwarmCursors() {
       active.push(t);
     };
 
-    const dur = (b: Bloque, w: number) => (b.kind === "text" ? clamp(200 + w * 0.3, 250, 500) : 380);
+    const dur = (b: Bloque, w: number) => (b.kind === "text" ? clamp(200 + w * 0.3, 250, 500) : 320);
 
     // true cuando el cursor ya ha salido
     const step = (t: Task, now: number) => {
