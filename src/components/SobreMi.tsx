@@ -41,7 +41,7 @@ export default function SobreMi() {
                 <li key={a}>{a}</li>
               ))}
             </ul>
-            <p className="mt-4 font-mono text-[11px] text-neutral-600 dark:text-neutral-400">Actualizado en {SOBRE_MI.actualizado}</p>
+            <p className="mt-4 font-mono text-xs text-neutral-600 dark:text-neutral-400">Actualizado en {SOBRE_MI.actualizado}</p>
           </div>
         </Build>
       </div>

@@ -105,7 +105,7 @@ export default function Carrusel() {
               <div className="flex flex-col border-b border-neutral-200 dark:border-neutral-800 md:border-b-0 md:border-r">
                 <figure>
                   <Image src={p.imagen} alt={p.alt} width={960} height={600} unoptimized className="aspect-[16/10] w-full object-cover" />
-                  <figcaption className="px-4 py-2 font-mono text-[11px] text-neutral-600 dark:text-neutral-400">{p.nota}</figcaption>
+                  <figcaption className="px-4 py-2 font-mono text-xs text-neutral-600 dark:text-neutral-400">{p.nota}</figcaption>
                 </figure>
                 <div className="flex flex-1 flex-col justify-end gap-3 px-4 pb-4 pt-1">
                   <ul className="flex flex-wrap gap-1.5">
@@ -127,7 +127,7 @@ export default function Carrusel() {
                   {([["Problema", p.caso.problema], ["Qué hice", p.caso.hice], ["Reto técnico", p.caso.reto], ["Resultado", p.caso.resultado]] as const).map(([k, v]) =>
                     v ? (
                       <div key={k}>
-                        <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-neutral-600 dark:text-neutral-400">{k}</dt>
+                        <dt className="font-mono text-xs uppercase tracking-[0.12em] text-neutral-600 dark:text-neutral-400">{k}</dt>
                         <dd className="text-neutral-700 dark:text-neutral-300">{v}</dd>
                       </div>
                     ) : null,

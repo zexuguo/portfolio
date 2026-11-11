@@ -18,7 +18,7 @@ export default function Tecnico() {
           <dl className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
             {TECNICO.stack.map((g) => (
               <div key={g.grupo}>
-                <dt className="mb-2 font-mono text-[11px] uppercase tracking-[0.12em] text-neutral-600 dark:text-neutral-400">{g.grupo}</dt>
+                <dt className="mb-2 font-mono text-xs uppercase tracking-[0.12em] text-neutral-600 dark:text-neutral-400">{g.grupo}</dt>
                 <dd className="flex flex-wrap gap-1.5">
                   {g.items.map((s) => (
                     <span key={s} className="rounded-full border border-neutral-300 px-2.5 py-1 font-mono text-xs text-neutral-700 dark:border-neutral-700 dark:text-neutral-300">

@@ -13,9 +13,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://portfolio-eta-flame-qgz8fcktoj.vercel.app"),
   title: "Zexu Guo — Portfolio",
   description:
     "Zexu Guo, desarrollador junior en Barcelona (DAM y 42). Aplicaciones web, bases de datos y herramientas para pequeños negocios. Busco prácticas o primer puesto junior en remoto.",
+  openGraph: {
+    title: "Zexu Guo — Portfolio",
+    description:
+      "Desarrollador junior: aplicaciones web, bases de datos y herramientas para pequeños negocios. Busco prácticas o primer puesto junior en remoto.",
+    siteName: "Portfolio de Zexu Guo",
+    locale: "es_ES",
+    type: "website",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Portfolio de Zexu Guo, desarrollador junior" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Zexu Guo — Portfolio",
+    description:
+      "Desarrollador junior: aplicaciones web, bases de datos y herramientas para pequeños negocios.",
+    images: ["/og.png"],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
