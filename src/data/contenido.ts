@@ -5,6 +5,8 @@ export const CV_URL: string | null = null;
 export const EMAIL = "zexuguo34@gmail.com";
 export const LINKEDIN = "https://www.linkedin.com/in/zexu-guo-b4517740a/";
 export const GITHUB = "https://github.com/zexuguo";
+/** Dirección pública de la web (metadatos, robots y sitemap). */
+export const SITE_URL = "https://portfolio-eta-flame-qgz8fcktoj.vercel.app";
 
 export const SECCIONES = [
   { id: "presentacion", label: "Presentación" },

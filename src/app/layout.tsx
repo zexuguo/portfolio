@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/data/contenido";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://portfolio-eta-flame-qgz8fcktoj.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: "Zexu Guo — Portfolio",
   description:
     "Zexu Guo, desarrollador junior en Barcelona (DAM y 42). Aplicaciones web, bases de datos y herramientas para pequeños negocios. Busco prácticas o primer puesto junior en remoto.",
@@ -33,6 +34,14 @@ export const metadata: Metadata = {
       "Desarrollador junior: aplicaciones web, bases de datos y herramientas para pequeños negocios.",
     images: ["/og.png"],
   },
+};
+
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
